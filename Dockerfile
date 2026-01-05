@@ -1,28 +1,26 @@
 # Multi-stage build for Pension Insurance Service
 
 # ===== Build stage =====
-FROM gradle:8.10.0-jdk21-alpine AS build
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 
 WORKDIR /app
 
-# Copy Gradle wrapper and build files first (for better layer cache)
-COPY build.gradle ./
-COPY gradle gradle
-COPY gradlew gradlew.bat ./
+# Copy Maven files first (for better layer cache)
+COPY pom.xml ./
 
 # Copy source code
 COPY src src
 
-# Build executable jar (skip tests; they are disabled anyway)
-RUN ./gradlew bootJar --no-daemon
+# Build executable jar
+RUN mvn clean package -DskipTests
 
 # ===== Runtime stage =====
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:21-jre
 
 WORKDIR /app
 
 # Copy jar from build stage
-COPY --from=build /app/build/libs/*.jar app.jar
+COPY --from=build /app/target/*.jar app.jar
 
 # Expose application port
 EXPOSE 8080
