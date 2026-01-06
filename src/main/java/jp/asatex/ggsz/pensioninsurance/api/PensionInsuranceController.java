@@ -10,7 +10,6 @@ import reactor.core.publisher.Mono;
 
 @Slf4j
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/pension-insurance")
 @RequiredArgsConstructor
 public class PensionInsuranceController {
