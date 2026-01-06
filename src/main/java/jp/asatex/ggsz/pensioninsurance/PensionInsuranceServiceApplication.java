@@ -3,10 +3,12 @@ package jp.asatex.ggsz.pensioninsurance;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.reactive.config.CorsRegistry;
+import org.springframework.web.reactive.config.EnableWebFlux;
+import org.springframework.web.reactive.config.WebFluxConfigurer;
 
 @SpringBootApplication
+@EnableWebFlux
 public class PensionInsuranceServiceApplication {
 
     public static void main(String[] args) {
@@ -14,8 +16,8 @@ public class PensionInsuranceServiceApplication {
     }
 
     @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
+    public WebFluxConfigurer corsConfigurer() {
+        return new WebFluxConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
@@ -25,7 +27,8 @@ public class PensionInsuranceServiceApplication {
                     )
                     .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                     .allowedHeaders("*")
-                    .allowCredentials(true);
+                    .allowCredentials(true)
+                    .maxAge(3600);
             }
         };
     }
